@@ -1,5 +1,7 @@
 package libriary.commands;
 
+import libriary.commands.client.*;
+
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -80,6 +82,10 @@ public class Commands {
 
     public boolean isNeedStudyGroup(String nameCommand){
         return commandsNeedStudyGroup.contains(nameCommand);
+    }
+
+    public void addCommand(Command command){
+        commands.put(command.getName(), command);
     }
 
     @Override

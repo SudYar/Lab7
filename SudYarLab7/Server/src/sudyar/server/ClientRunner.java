@@ -49,6 +49,7 @@ public class ClientRunner extends Thread {
                     logging = false;
                 }
                 sendPack(answerPack);
+                server.printInf("Результат команды: " + authAnswer);
             }
             while (userConnection.equals(server.getUserConnection(idConnection)) && server.isServerRun()) {
                 try {

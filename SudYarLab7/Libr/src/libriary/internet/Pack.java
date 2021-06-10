@@ -73,7 +73,7 @@ public class Pack implements Serializable {
     public String toString() {
         return (user == null ? "" : " user: " + (user.getUser() == null ? "null" : user.getUser().getLogin()) + "\n") +
                 (command == null ? "" : " command: " + command.getName() + "\n") +
-                (argument == null ? "" : " argument: " + argument + '\n') +
+                (argument == null ? "" : ("".equals(argument) ? "" : " argument: " + argument + '\n')) +
                 (studyGroup == null ? "" : " studyGroup: " + studyGroup + "\n")+
                 (answer == null ? "" : " answer: " + answer + '\n') +
                 (script == null ? "" : " script: " + script);

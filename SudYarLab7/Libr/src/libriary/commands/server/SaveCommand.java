@@ -1,5 +1,6 @@
-package libriary.commands;
+package libriary.commands.server;
 
+import libriary.commands.AbstractCommand;
 import libriary.data.StudyGroupCollection;
 import libriary.internet.Pack;
 

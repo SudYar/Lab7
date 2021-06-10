@@ -1,9 +1,10 @@
-package libriary.commands;
+package libriary.commands.client;
 
+import libriary.commands.AbstractCommand;
 import libriary.data.StudyGroupCollection;
 import libriary.internet.Pack;
 
-public class RegistrationCommand extends AbstractCommand{
+public class RegistrationCommand extends AbstractCommand {
     private StudyGroupCollection studyGroupCollection;
 
     public RegistrationCommand(StudyGroupCollection studyGroupCollection) {

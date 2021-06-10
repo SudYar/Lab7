@@ -1,10 +1,13 @@
 package libriary.utilities;
 
 import libriary.commands.*;
+import libriary.commands.client.*;
+import libriary.commands.server.DisconnectCommand;
+import libriary.commands.server.SaveCommand;
+import libriary.commands.server.ShowConnectionCommand;
 import libriary.data.StudyGroupCollection;
 
 import java.util.HashSet;
-import java.util.concurrent.ConcurrentMap;
 
 public class GetCommands {
 
@@ -41,6 +44,8 @@ public class GetCommands {
 
         set.add(new HelpCommand(serverCommands));
         set.add(new SaveCommand(null));
+        set.add(new DisconnectCommand());
+        set.add(new ShowConnectionCommand());
         set.add(new ExitCommand());
 
         serverCommands.setCommands(set);
@@ -54,6 +59,7 @@ public class GetCommands {
         set.add(new HelpCommand(authCommands));
         set.add(new ExitCommand("Завершение программы"));
         set.add(new RegistrationCommand(collection));
+        set.add(new LogInCommand(collection));
 
         authCommands.setCommands(set);
 

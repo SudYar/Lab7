@@ -1,11 +1,12 @@
-package libriary.commands;
+package libriary.commands.client;
 
+import libriary.commands.AbstractCommand;
 import libriary.data.FormOfEducation;
 import libriary.data.StudyGroupCollection;
 import libriary.internet.Pack;
 import libriary.utilities.StudyGroupParser;
 
-public class RemoveAllByFormOfEducationCommand  extends AbstractCommand{
+public class RemoveAllByFormOfEducationCommand  extends AbstractCommand {
     private StudyGroupCollection studyGroupCollection;
 
     public RemoveAllByFormOfEducationCommand(StudyGroupCollection studyGroupCollection) {

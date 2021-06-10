@@ -1,11 +1,12 @@
-package libriary.commands;
+package libriary.commands.client;
 
+import libriary.commands.AbstractCommand;
 import libriary.data.StudyGroup;
 import libriary.data.StudyGroupCollection;
 import libriary.internet.Pack;
 import libriary.utilities.StudyGroupParser;
 
-public class CountByStudentsCountCommand extends AbstractCommand{
+public class CountByStudentsCountCommand extends AbstractCommand {
     private StudyGroupCollection studyGroupCollection;
 
     public CountByStudentsCountCommand(StudyGroupCollection studyGroupCollection) {

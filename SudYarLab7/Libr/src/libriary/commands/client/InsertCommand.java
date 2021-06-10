@@ -1,10 +1,11 @@
-package libriary.commands;
+package libriary.commands.client;
 
+import libriary.commands.AbstractCommand;
 import libriary.data.StudyGroupCollection;
 import libriary.exception.DuplicateException;
 import libriary.internet.Pack;
 
-public class InsertCommand extends AbstractCommand{
+public class InsertCommand extends AbstractCommand {
     private StudyGroupCollection studyGroupCollection;
 
     public InsertCommand(StudyGroupCollection studyGroupCollection) {

@@ -16,23 +16,24 @@ public class Registration {
 
     public static UserConnection logIn(Client client, Commands commands) throws IOException, ClassNotFoundException {
         UserConnection user = null;
-        client.print("Пожалуйста зарегестрируйтесь или войдите, используя ваш логин и пароль (если нет пароля - будет установлен пустой пароль\nМожете ввести help\n$");
+        client.printLn("Пожалуйста зарегестрируйтесь или войдите, используя ваш логин и пароль (если нет пароля - будет установлен пустой пароль\nМожете ввести help");
         while (user == null) {
+            client.print("$");
             String line = client.readLine();
             String[] splitLine = line.trim().split(" ");
-            if (splitLine.length < 1) client.print("Ошибка, поступила пустая строка\n$");
+            if (splitLine.length < 1) client.printLn("Ошибка, поступила пустая строка");
             else {
 
                 String commandName = splitLine[0];
                 if (commands.getCommand(commandName) == null)
-                    client.print("Не найдена команда:" + commandName + " Введите help, чтобы узнать возможные команды\n$");
+                    client.printLn("Не найдена команда:" + commandName + " Введите help, чтобы узнать возможные команды");
                 else {
                     switch (commandName) {
                         case ("exit"):
-                            client.print("Завершение работы");
+                            client.printLn("Завершение работы");
                             System.exit(0);
                         case ("help"):
-                            client.print(commands.getCommand("help").execute(null) + "\n$");
+                            client.printLn(commands.getCommand("help").execute(null));
                             break;
                         default:
                             if (!(splitLine.length < 2) && !"".equals(splitLine[1].trim())) {
@@ -40,13 +41,12 @@ public class Registration {
                                 String password = (splitLine.length > 2 ? splitLine[2] : "");
                                 user = new UserConnection(new User(login, hashPassword(login, password)), null);
                                 Pack authPack = new Pack(user, commands.getCommand(commandName), "");
-                                client.printLn(authPack.toString());
                                 client.sendPack(authPack);
                                 authPack = client.readPack();
                                 user = authPack.getUserConnection();
                                 client.printLn(authPack.getAnswer());
 
-                            } else client.print("Либо не введён логин, либо перед ним много пробелов\n$");
+                            } else client.printLn("Либо не введён логин, либо перед ним много пробелов");
                             break;
                     }
                 }

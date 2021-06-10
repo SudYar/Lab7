@@ -139,7 +139,7 @@ public class Server {
         serverRun = false;
     }
 
-    public boolean isServerRun (){return serverRun;};
+    public boolean isServerRun (){return serverRun;}
 
     private BufferedReader scanner =new BufferedReader(new InputStreamReader(System.in));
 
@@ -168,14 +168,41 @@ public class Server {
                     printInf(commands.getCommand("exit").execute(null));
                 }
                 else {
-                    line = line.trim();
-                    if (commands.getCommands().containsKey(line)){
-                        if ("exit".equals(line)) {
-                            printInf(commands.getCommand("save").execute(null));
-                            printInf("Завершение работы сервера");
-                            printInf(commands.getCommand("exit").execute(null));
-                        }
-                        else println(commands.getCommand(line).execute(null));
+                    String[] splitLine = line.trim().split(" ");
+                    if (splitLine.length > 0 && commands.getCommands().containsKey(splitLine[0])){
+                         String argument = (splitLine.length > 1 ? splitLine[1]:"");
+                            if ("VALID".equals(commands.getCommand(splitLine[0]).isValidArgument( argument)))
+                                switch (splitLine[0]){
+                                    case ("exit"):
+                                        printInf(commands.getCommand("save").execute(null));
+                                        printInf("Завершение работы сервера");
+                                        printInf(commands.getCommand("exit").execute(null));
+                                        break;
+                                    case ("disconnect"):
+                                        int id = Integer.parseInt(argument);
+                                        if (clientCollection.containsKey(id)) {
+                                            try {
+                                                clientCollection.get(id).getSocket().close();
+                                            } catch (IOException e) {
+                                                printErr(e,"При попытке закрыть сокет (вероятно уже закрыт)");
+                                            }
+                                            removeClient(id);
+                                            println("Клиент с этим id отключен");
+                                        } else System.out.println("Такого id нет, введите show_con, чтобы узнать, кто подключен");
+                                        break;
+                                    case ("show_con"):
+                                        String answer = "";
+                                        for (int i : clientCollection.keySet()){
+                                            answer+= "Id: " + i + clientCollection.get(i).toString() + "\n";
+                                        }
+                                        System.out.println("".equals(answer) ? "Никто не подключился" : answer.trim() );
+                                        break;
+                                    default:
+                                        println(commands.getCommand(splitLine[0]).execute(null));
+                                        break;
+                                }
+                            else println(commands.getCommand(splitLine[0]).isValidArgument( argument));
+
                     }else println("Такой команды нет, введите help");
 
                 }

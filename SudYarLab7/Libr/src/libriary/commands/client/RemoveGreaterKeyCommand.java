@@ -1,10 +1,11 @@
-package libriary.commands;
+package libriary.commands.client;
 
+import libriary.commands.AbstractCommand;
 import libriary.data.StudyGroupCollection;
 import libriary.internet.Pack;
 import libriary.utilities.StudyGroupParser;
 
-public class RemoveGreaterKeyCommand extends AbstractCommand{
+public class RemoveGreaterKeyCommand extends AbstractCommand {
 
     private StudyGroupCollection studyGroupCollection;
 

@@ -1,5 +1,6 @@
-package libriary.commands;
+package libriary.commands.client;
 
+import libriary.commands.AbstractCommand;
 import libriary.data.StudyGroupCollection;
 import libriary.internet.Pack;
 
@@ -9,7 +10,7 @@ import libriary.internet.Pack;
  *
  */
 
-public class ClearCommand  extends AbstractCommand{
+public class ClearCommand  extends AbstractCommand {
     private StudyGroupCollection studyGroupCollection;
 
     public ClearCommand(StudyGroupCollection studyGroupCollection) {

@@ -19,7 +19,7 @@ import java.util.List;
 public class Client {
 
     Socket clientSocket;
-    BufferedReader scanner =new BufferedReader(new InputStreamReader(System.in));
+
     Commands commands;
     boolean isConnected = false;
 
@@ -27,19 +27,8 @@ public class Client {
         this.clientSocket = clientSocket;
     }
 
-    public String readLine(){
-        String line;
-        try {
-            line = scanner.readLine();
-        } catch (IOException e) {
-            System.out.println("Ошибка ввода, пожалуйста не вводите это снова");
-            return "";
-        }
-        if (line == null) {
-            System.out.println("ВВедено Ctrl + D\nЗавершаем работу");
-            System.exit(1);
-        }
-        return line;
+    public String  readLine (){
+        return Main.readLine();
     }
 
     public void printLn(String line){
