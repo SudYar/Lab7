@@ -11,6 +11,8 @@ import java.util.Objects;
 
 public abstract class AbstractCommand implements Command, Serializable {
 
+    private static final long serialVersionUID = 104L;
+
     private String name;
     private String descriptionArgument;
     private String description;

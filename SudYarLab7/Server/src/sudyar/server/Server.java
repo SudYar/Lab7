@@ -4,6 +4,7 @@ package sudyar.server;
 import libriary.commands.Commands;
 import libriary.data.StudyGroupCollection;
 import libriary.internet.Pack;
+import libriary.internet.User;
 import libriary.internet.UserConnection;
 import libriary.utilities.Serializer;
 
@@ -83,9 +84,11 @@ public class Server {
                     if (!freeId.isEmpty()){
                         answer = new Pack("Подключение удалось");
                         int idConnection = freeId.iterator().next();
-                        UserConnection clientConnection = new UserConnection(clientSocket);
+                        UserConnection clientConnection = new UserConnection(clientSocket, idConnection);
+                        freeId.remove(idConnection);
                         clientCollection.put(idConnection, clientConnection);
                         sendPack(answer, idConnection);
+                        printInf("Ему выдан свободный id: " + idConnection);
                         ClientRunner newClient = new ClientRunner(clientSocket, this, clientCommands, idConnection, clientConnection);
                         newClient.start();
                     }
@@ -93,10 +96,11 @@ public class Server {
                         answer = new Pack("Сервер переполнен, подключайтесь позже");
                         printInf("Сервер переполнен, отключаем клиента");
                         int idConnection = freeId.iterator().next();
-                        UserConnection clientConnection = new UserConnection(clientSocket);
+                        UserConnection clientConnection = new UserConnection(clientSocket, idConnection);
                         clientCollection.put(idConnection, clientConnection);
                         sendPack(answer, idConnection);
                         clientSocket.close();
+                        removeClient(idConnection);
                     }
 
                 }catch (Exception e){
@@ -118,7 +122,16 @@ public class Server {
         clientCollection.remove(id);
     }
 
-    public UserConnection getClientConnection(int id) {
+    /**
+     * Добавление в подключение залогиневшегося юзера
+     * @param id - id-шник подключения
+     * @param user
+     */
+    public void updateUserConnection (int id, User user){
+        clientCollection.get(id).setUser(user);
+    }
+
+    public UserConnection getUserConnection(int id) {
         return clientCollection.get(id);
     }
 
@@ -207,7 +220,7 @@ public class Server {
     }
 
     public void printErr(Exception e, String line){
-        System.out.println("ERROR: " + line + e.getMessage());
+        System.out.println("ERROR: " + line + (e.getMessage() == null ? "": ": " + e.getMessage()));
         if (isHaveLog) logger.log(Level.WARNING, line , e);
     }
 

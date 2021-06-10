@@ -40,6 +40,7 @@ public class GetCommands {
         Commands serverCommands = new Commands();
 
         set.add(new HelpCommand(serverCommands));
+        set.add(new SaveCommand(null));
         set.add(new ExitCommand());
 
         serverCommands.setCommands(set);

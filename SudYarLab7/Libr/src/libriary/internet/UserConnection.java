@@ -9,15 +9,16 @@ public class UserConnection implements Serializable {
 
     private Integer id;
     private User user;
-    private Socket socket;
+    private transient Socket socket;
 
     public UserConnection(User user, Socket socket) {
         this.user = user;
         this.socket = socket;
     }
 
-    public UserConnection(Socket socket) {
+    public UserConnection(Socket socket, int id) {
         this.socket = socket;
+        this.id = id;
     }
 
     public void setUser(User user) {
@@ -42,7 +43,7 @@ public class UserConnection implements Serializable {
 
     @Override
     public String toString() {
-        return (id == null ? "" : "id подключения: " + id.toString()) +
+        return /*(id == null ? "" : "id подключения: " + id.toString()) +*/
                 "\n\tПользователь: " + (user==null ? "Клиент ещё не авторизовался" : user) +
                 "\n\tЕго подключение: " + socket.toString();
     }

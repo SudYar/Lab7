@@ -2,9 +2,11 @@ package sudyar.server;
 
 
 import libriary.commands.Commands;
+import libriary.data.StudyGroupCollection;
 import libriary.internet.Pack;
 import libriary.internet.UserConnection;
 import libriary.utilities.CommandsExecute;
+import libriary.utilities.GetCommands;
 import libriary.utilities.Serializer;
 
 import java.io.IOException;
@@ -28,12 +30,30 @@ public class ClientRunner extends Thread {
     }
 
     public void run(){
+
+        Commands authCommands = GetCommands.getAuthCommands(StudyGroupCollection.getInstance());
+
         CommandsExecute commandsExecute = new CommandsExecute(commands);
         try {
-            while (userConnection.equals(server.getClientConnection(idConnection)) && server.isServerRun()) {
+            CommandsExecute authCommandsExecute = new CommandsExecute(authCommands);
+            boolean logging = true;
+            while (logging && userConnection.equals(server.getUserConnection(idConnection)) && server.isServerRun()) {
+                Pack request = readPack();
+                server.printInf("Полученный пакет от клиента " + idConnection + ":  \n" + request.toString());
+                String authAnswer = authCommandsExecute.execute(request);
+                Pack answerPack = new Pack(authAnswer);
+                if (authAnswer.contains("успешно")) {
+                    server.updateUserConnection(idConnection, StudyGroupCollection.getInstance().getUser(request.getUserConnection().getUser().getLogin()));
+                    userConnection = server.getUserConnection(idConnection);
+                    answerPack.setConnection(userConnection);
+                    logging = false;
+                }
+                sendPack(answerPack);
+            }
+            while (userConnection.equals(server.getUserConnection(idConnection)) && server.isServerRun()) {
                 try {
                     Pack request = readPack();
-                    server.printInf("Полученный пакет: \n" + request.toString());
+                    server.printInf("Полученный пакет от клиента " + idConnection + ":  \n" + request.toString());
                     String answer = commandsExecute.execute(request);
                     server.printInf("Результат команды: " + answer);
                     Pack newPack = new Pack(answer);
@@ -44,8 +64,7 @@ public class ClientRunner extends Thread {
                 }
             }
         }catch (IOException e) {
-            if ("UserConnection reset".equals(e.getMessage())) server.printInf("Отключился клиент с id: " + idConnection + "\nподключением: " + userConnection.toString());
-            else server.printErr(e, "");
+            server.printInf("Отключился клиент с id: " + idConnection + "\nподключением: " + userConnection.toString());
             try {
                 server.removeClient(idConnection);
                 socket.close();
@@ -53,6 +72,7 @@ public class ClientRunner extends Thread {
                 server.printErr(ioException, "При попытке закрыть сокет: ");
             }
         } catch (Exception e) {
+            e.printStackTrace();
             server.printErr(e, "Непредвиденная ошибка у клиента " + idConnection);
         }
 
@@ -70,7 +90,8 @@ public class ClientRunner extends Thread {
             buf = Serializer.serialize(pack);
 
         } catch (IOException e) {
-            System.out.println("Ошибка при упаковке пакета");
+            e.printStackTrace();
+            server.printErr(e,"Ошибка при упаковке пакета");
             try {
                 buf = Serializer.serialize(new Pack("Ошибка"));
             } catch (IOException ioException) {

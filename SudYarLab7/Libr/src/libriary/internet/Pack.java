@@ -30,6 +30,7 @@ public class Pack implements Serializable {
     public Pack(UserConnection user, Command command, String argument) {
         this.command = command;
         this.argument = argument;
+        this.user = user;
         
     }
 
@@ -70,7 +71,7 @@ public class Pack implements Serializable {
 
     @Override
     public String toString() {
-        return (user == null ? "" : " user: " + command.getName() + "\n") +
+        return (user == null ? "" : " user: " + (user.getUser() == null ? "null" : user.getUser().getLogin()) + "\n") +
                 (command == null ? "" : " command: " + command.getName() + "\n") +
                 (argument == null ? "" : " argument: " + argument + '\n') +
                 (studyGroup == null ? "" : " studyGroup: " + studyGroup + "\n")+

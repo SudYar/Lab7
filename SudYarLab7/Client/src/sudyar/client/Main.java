@@ -21,6 +21,8 @@ public class Main {
 
         } catch (IOException  ioe) {
             System.out.println("Сервер не работает");;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

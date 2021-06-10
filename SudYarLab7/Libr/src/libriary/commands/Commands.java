@@ -39,13 +39,11 @@ public class Commands {
     }
 
     public Commands(HashSet<Command> set){
-        System.out.println("Введите help, чтобы вывести справку по доступным командам");
         for (Command command: set) {
             commands.put(command.getName(), command);
         }
     }
     public Commands(HashSet<Command> set1, HashSet<Command> set2){
-        System.out.println("Введите help, чтобы вывести справку по доступным командам");
         for (Command command: set1) {
             commands.put(command.getName(), command);
         }
@@ -57,7 +55,6 @@ public class Commands {
 
 
     public void setCommands(HashSet<Command> set){
-        System.out.println("Введите help, чтобы вывести справку по доступным командам");
         for (Command command: set) {
             commands.put(command.getName(), command);
         }

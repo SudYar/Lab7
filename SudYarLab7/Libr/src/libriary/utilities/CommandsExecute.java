@@ -34,7 +34,7 @@ public class CommandsExecute {
             if (line.length > 1) argument = line[1];
             if (command != null) {
                 if ("execute_script".equals(command.getName())) answer.append("Выполнение скрипта в скрипте запрещено\n");
-                else if (commands.isNeedStudyGroup(command)) {
+                else if (commands.isNeedStudyGroup(command.getName())) {
                     StudyGroupBuilder builder = new StudyGroupBuilder();
                     try {
 
@@ -70,7 +70,7 @@ public class CommandsExecute {
                                     answer.append("PassportId должна быть непустая строка\n");
                             } else answer.append("Weight должен быть типа double > 0\n" );
                         }
-                        Pack newPack = new Pack(command, argument, builder.toStudyGroup());
+                        Pack newPack = new Pack(pack.getUserConnection(), command, argument, builder.toStudyGroup());
                         answer.append(command.execute(newPack)).append('\n');
                         continue;
 
@@ -80,7 +80,7 @@ public class CommandsExecute {
 
                 } else {
                     Pack newPack;
-                    newPack = new Pack(command, argument);
+                    newPack = new Pack(pack.getUserConnection(), command, argument);
                     answer.append(command.execute(newPack)).append('\n');
                 }
             } else answer.append("нет команды \"").append(line[0]).append("\"\n");

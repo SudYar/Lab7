@@ -14,8 +14,9 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+
+    public String getLogin(){
+        return login;
     }
 
     public Integer getId() {
@@ -24,10 +25,6 @@ public class User implements Serializable {
 
     public byte[] getPassword() {
         return password;
-    }
-
-    public String getLogin() {
-        return login;
     }
 
     @Override

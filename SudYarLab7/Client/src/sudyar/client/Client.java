@@ -46,6 +46,10 @@ public class Client {
         System.out.println(line);
     }
 
+    public void print(String line) {
+        System.out.print(line);
+    }
+
     public void run (Commands comm) throws IOException, ClassNotFoundException {
         this.commands = comm;
         String answer = readPack().getAnswer();
@@ -57,7 +61,7 @@ public class Client {
 
             String line;
             while (isConnected) {
-                System.out.print("$");
+                print("$");
                 line = readLine();
                 String[] command = line.trim().split(" ", 3);
                 String argument;
