@@ -11,6 +11,8 @@ public class StudyGroupBuilder {
     private String nameAdmin;
     private Double weight;
     private String passportId;
+    private Integer ownerId;
+    private String ownerLogin;
 
     public StudyGroupBuilder() {
 
@@ -37,6 +39,11 @@ public class StudyGroupBuilder {
         return x != null;
     }
 
+    public boolean addX (Double dou){
+        x = dou;
+        return x != null;
+    }
+
     public boolean addY (String line){
         y = null;
         if ((line != null) && !("".equals(line.trim())) && (line.trim().split(" ").length < 2)) {
@@ -44,11 +51,28 @@ public class StudyGroupBuilder {
         }
         return y != null;
     }
+    public boolean addY (Float flo){
+        y = null;
+        if (flo > Coordinates.yMinValue) y = flo;
+        return y != null;
+    }
 
     public boolean addStudentCount (String line){
         Integer studentCount = null;
         if ((line != null) && !("".equals(line.trim())) && (line.trim().split(" ").length < 2)) {
             studentCount = StudyGroupParser.parseStudentsCount(line.trim());
+        }
+        if (studentCount == null) return false;
+        else{
+            studyGroup.setStudentsCount(studentCount);
+            return true;
+        }
+    }
+
+    public boolean addStudentCount (Integer value){
+        Integer studentCount = null;
+        if ((value != null) && (value > 0)) {
+            studentCount = value;
         }
         if (studentCount == null) return false;
         else{
@@ -104,13 +128,28 @@ public class StudyGroupBuilder {
         return passportId != null;
     }
 
+    public boolean addOwnerId(int id){
+        ownerId = id;
+        studyGroup.setIdOwner(ownerId);
+        return true;
+    }
+
+    public boolean addOwnerLogin(String line){
+        ownerLogin = null;
+        if ((line != null) && !("".equals(line.trim())) && (line.trim().split(" ").length < 2)){
+            ownerLogin = line;
+            studyGroup.setLoginOwner(ownerLogin);
+        }
+        return ownerLogin != null;
+    }
+
     public StudyGroup toStudyGroup (){
         studyGroup.setCoordinates(StudyGroupParser.parseCoordinates(x, y));
         studyGroup.setGroupAdmin(StudyGroupParser.parsePerson(nameAdmin, weight, passportId));
         if ((studyGroup.getName() != null) && (studyGroup.getCoordinates() != null) &&
-                (studyGroup.getStudentsCount() != null) && (studyGroup.getSemesterEnum() != null &&
-                studyGroup.getCreationDate() != null)
-        ) return studyGroup;
+                (studyGroup.getStudentsCount() != null) && (studyGroup.getSemesterEnum() != null) &&
+                (studyGroup.getCreationDate() != null) && (ownerId != null) && (ownerLogin != null))
+            return studyGroup;
         else return null;
     }
 }

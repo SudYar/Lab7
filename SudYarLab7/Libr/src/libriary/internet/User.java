@@ -6,10 +6,10 @@ import java.util.Objects;
 public class User implements Serializable {
     private static final long serialVersionUID = 102L;
     String login;
-    byte[] password;
+    String password;
     Integer id;
 
-    public User(String login, byte[] password) {
+    public User(String login, String password) {
         this.login = login;
         this.password = password;
     }
@@ -23,8 +23,12 @@ public class User implements Serializable {
         return id;
     }
 
-    public byte[] getPassword() {
+    public String  getPassword() {
         return password;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Override

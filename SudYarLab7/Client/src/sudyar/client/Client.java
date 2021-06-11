@@ -3,6 +3,7 @@ package sudyar.client;
 
 
 import libriary.commands.*;
+import libriary.data.StudyGroup;
 import libriary.internet.Pack;
 import libriary.internet.UserConnection;
 import libriary.utilities.GetCommands;
@@ -46,7 +47,7 @@ public class Client {
         else {
             isConnected = true;
 
-            UserConnection user = Registration.logIn(this, GetCommands.getAuthCommands(null));
+            UserConnection user = Registration.logIn(this, GetCommands.getAuthCommands(null, null));
 
             String line;
             while (isConnected) {
@@ -95,8 +96,9 @@ public class Client {
                                     } else System.out.println("Найден такой Id у группы\n" + testAnswer.getAnswer());
                                 } else System.out.println("Ошибка при получении пакета");
                             }
-                            request = new Pack(user, commands.getCommand(command[0]), argument,
-                                    new StudyGroupAsk().getStudyGroup(this));
+                            StudyGroup group = new StudyGroupAsk().getStudyGroup(this);
+                            group.setLoginOwner(user.getUser().getLogin());
+                            request = new Pack(user, commands.getCommand(command[0]), argument, group);
                         } else request = new Pack(user, commands.getCommand(command[0]), argument);
                         sendPack(request);
                         if (!isConnected) continue;

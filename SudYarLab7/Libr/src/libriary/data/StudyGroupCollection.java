@@ -3,24 +3,22 @@ package libriary.data;
 import libriary.exception.DuplicateException;
 import libriary.internet.User;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class StudyGroupCollection {
     private static volatile StudyGroupCollection instance;
 
-    private final HashMap<Integer, StudyGroup > collection;
-    private final HashMap<String, User> userCollection;
-    private final HashSet<String> passportIdSet;
+    private final Map<Integer, StudyGroup> collection;
+    private final Map<String, User> userCollection;
+    private final Set<String> passportIdSet;
     private int maxId = 0;
 
 
     private StudyGroupCollection() {
-        collection = new HashMap<>();
-        passportIdSet = new HashSet<>();
-        userCollection = new HashMap<>();
+        collection = Collections.synchronizedMap( new HashMap<>());
+        passportIdSet = Collections.synchronizedSet( new HashSet<>());
+        userCollection = Collections.synchronizedMap( new HashMap<>());
     }
     public static StudyGroupCollection getInstance() {
         StudyGroupCollection localInstance = instance;
@@ -81,7 +79,7 @@ public class StudyGroupCollection {
     }
 
 
-    public HashMap<Integer, StudyGroup> getCollection() {
+    public Map<Integer, StudyGroup> getCollection() {
         return collection;
     }
 

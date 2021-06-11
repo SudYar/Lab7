@@ -15,6 +15,8 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
     private FormOfEducation formOfEducation = null; //Поле может быть null
     private Semester semesterEnum; //Поле не может быть null
     private Person groupAdmin = null; //Поле может быть null
+    private String loginOwner;
+    private Integer idOwner;
 
 
     public StudyGroup(int id, @NotNull String name, @NotNull Coordinates coordinates,
@@ -109,6 +111,18 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
         this.groupAdmin = groupAdmin;
     }
 
+    public void setLoginOwner(String loginOwner) {
+        this.loginOwner = loginOwner;
+    }
+
+    public void setIdOwner(Integer idOwner) {
+        this.idOwner = idOwner;
+    }
+
+    public Integer getIdOwner() {
+        return idOwner;
+    }
+
     @Override
     public String toString() {
         return  "ID:" + id +
@@ -119,7 +133,8 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
                 "\n\tStudents count: " + studentsCount +
                 "\n\tForm of education: " + (formOfEducation == null ? "-" : formOfEducation) +
                 "\n\tSemester: " + semesterEnum +
-                "\n\tGroup admin: " + (groupAdmin == null ? "-" : groupAdmin)
+                "\n\tGroup admin: " + (groupAdmin == null ? "-" : groupAdmin) +
+                "\n\tOwner: " + (loginOwner == null? "-" : loginOwner)
                 ;
     }
 

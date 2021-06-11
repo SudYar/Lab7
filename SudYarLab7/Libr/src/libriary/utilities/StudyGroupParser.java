@@ -76,6 +76,20 @@ public class StudyGroupParser {
 
     }
 
+    public static Date parseDate (Long time){
+        Date date = new Date();
+        Date date21 = new Date();
+        date21.setTime(Long.parseLong("1609448400000"));
+        try {
+            date.setTime(time);
+            if (date.before(date21)) return null;
+            else return date;
+        } catch (NumberFormatException e ) {
+            return null;
+        }
+
+    }
+
     public static Integer parseStudentsCount (String value){
         try {
             int result = Integer.parseInt(value);

@@ -6,6 +6,7 @@ import libriary.commands.server.DisconnectCommand;
 import libriary.commands.server.SaveCommand;
 import libriary.commands.server.ShowConnectionCommand;
 import libriary.data.StudyGroupCollection;
+import libriary.internet.DataBase;
 
 import java.util.HashSet;
 
@@ -53,12 +54,12 @@ public class GetCommands {
         return serverCommands;
     }
 
-    public static Commands getAuthCommands(StudyGroupCollection collection){
+    public static Commands getAuthCommands(StudyGroupCollection collection , DataBase dataBase){
         HashSet<Command> set = new HashSet<>();
         Commands authCommands = new Commands();
         set.add(new HelpCommand(authCommands));
         set.add(new ExitCommand("Завершение программы"));
-        set.add(new RegistrationCommand(collection));
+        set.add(new RegistrationCommand(collection, dataBase));
         set.add(new LogInCommand(collection));
 
         authCommands.setCommands(set);

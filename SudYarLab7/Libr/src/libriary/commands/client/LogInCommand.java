@@ -27,7 +27,7 @@ public class LogInCommand extends AbstractCommand {
         else {
             User user = studyGroupCollection.getUser(pack.getUserConnection().getUser().getLogin());
             if (user != null)
-                if (Arrays.equals(user.getPassword(),pack.getUserConnection().getUser().getPassword()))
+                if (user.getPassword().equals(pack.getUserConnection().getUser().getPassword()))
                     return "Подключение успешно";
                 else return "Пароль не совпадает " ;
             else {

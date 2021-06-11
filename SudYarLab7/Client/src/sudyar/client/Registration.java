@@ -6,6 +6,7 @@ import libriary.internet.User;
 import libriary.internet.UserConnection;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -56,17 +57,25 @@ public class Registration {
 
     }
 
-    private static byte[] hashPassword(String login, String password){
+    private static String hashPassword(String login, String password){
         MessageDigest md;
         byte[] hash = null;
+        String newPassword = "";
         try {
             md = MessageDigest.getInstance("SHA-224");
             byte[] data = (password + login).getBytes(StandardCharsets.UTF_8);
             hash = md.digest(data);
+            BigInteger no = new BigInteger(1, hash);
+            newPassword = no.toString(16);
+
+            while (newPassword.length() < 32){
+                newPassword = "0" + newPassword;
+            }
+
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        return hash;
+        return newPassword;
     }
 
 }

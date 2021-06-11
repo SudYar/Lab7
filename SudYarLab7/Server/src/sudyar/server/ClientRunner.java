@@ -3,6 +3,7 @@ package sudyar.server;
 
 import libriary.commands.Commands;
 import libriary.data.StudyGroupCollection;
+import libriary.internet.DataBase;
 import libriary.internet.Pack;
 import libriary.internet.UserConnection;
 import libriary.utilities.CommandsExecute;
@@ -20,18 +21,20 @@ public class ClientRunner extends Thread {
     private Commands commands;
     private int idConnection;
     private UserConnection userConnection;
+    private DataBase dataBase;
 
-    public ClientRunner(Socket socket, Server server, Commands commands, int idConnection, UserConnection userConnection) {
+    public ClientRunner(Socket socket, Server server, Commands commands, int idConnection, UserConnection userConnection, DataBase dataBase) {
         this.socket = socket;
         this.server = server;
         this.commands = commands;
         this.idConnection = idConnection;
         this.userConnection = userConnection;
+        this.dataBase = dataBase;
     }
 
     public void run(){
 
-        Commands authCommands = GetCommands.getAuthCommands(StudyGroupCollection.getInstance());
+        Commands authCommands = GetCommands.getAuthCommands(StudyGroupCollection.getInstance(), dataBase);
 
         CommandsExecute commandsExecute = new CommandsExecute(commands);
         try {
@@ -39,7 +42,7 @@ public class ClientRunner extends Thread {
             boolean logging = true;
             while (logging && userConnection.equals(server.getUserConnection(idConnection)) && server.isServerRun()) {
                 Pack request = readPack();
-                server.printInf("Полученный пакет от клиента " + idConnection + ":  \n" + request.toString());
+                server.printInf("Полученный пакет от клиента " + idConnection + ":  \n" + request.toString().trim());
                 String authAnswer = authCommandsExecute.execute(request);
                 Pack answerPack = new Pack(authAnswer);
                 if (authAnswer.contains("успешно")) {
@@ -54,7 +57,7 @@ public class ClientRunner extends Thread {
             while (userConnection.equals(server.getUserConnection(idConnection)) && server.isServerRun()) {
                 try {
                     Pack request = readPack();
-                    server.printInf("Полученный пакет от клиента " + idConnection + ":  \n" + request.toString());
+                    server.printInf("Полученный пакет от клиента " + idConnection + ":  \n" + request.toString().trim());
                     String answer = commandsExecute.execute(request);
                     server.printInf("Результат команды: " + answer);
                     Pack newPack = new Pack(answer);

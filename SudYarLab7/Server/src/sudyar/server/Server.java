@@ -3,6 +3,8 @@ package sudyar.server;
 
 import libriary.commands.Commands;
 import libriary.data.StudyGroupCollection;
+import libriary.exception.DBExceprion;
+import libriary.internet.DataBase;
 import libriary.internet.Pack;
 import libriary.internet.User;
 import libriary.internet.UserConnection;
@@ -14,6 +16,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -71,6 +74,25 @@ public class Server {
         for (int i = 1; i <= maxConnection + 1 ; i++){
             freeId.add(i);
         }
+        DataBase dataBase = null;
+        print("Введите пароль от пользователя s311742, чтобы войти в базу данных\n>");
+        while (dataBase == null) {
+            try {
+                dataBase = new DataBase("s311742", readLine());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                System.exit(-1);
+            } catch (SQLException throwables) {
+                printErr(throwables, "Ошибка, введён неверный пароль для пользователя s311742, либо база данных не доступна");
+            }
+        }
+        try {
+            printInf(dataBase.selectAll(studyGroupCollection));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (DBExceprion dbExceprion) {
+            printErr(dbExceprion, "Непредвиденная ошибка при получении данных с базы данных: ");
+        }
         getServerConsole(serverCommands).start();
         try(ServerSocket serverSocket = new ServerSocket(port)) {
             printInf("Сервер запущен");
@@ -89,7 +111,7 @@ public class Server {
                         clientCollection.put(idConnection, clientConnection);
                         sendPack(answer, idConnection);
                         printInf("Ему выдан свободный id: " + idConnection);
-                        ClientRunner newClient = new ClientRunner(clientSocket, this, clientCommands, idConnection, clientConnection);
+                        ClientRunner newClient = new ClientRunner(clientSocket, this, clientCommands, idConnection, clientConnection, dataBase);
                         newClient.start();
                     }
                     else {
