@@ -21,7 +21,7 @@ public class Main {
         }
         Integer count = null;
         if (args.length > 0) count = StudyGroupParser.parseId(args[0]);
-        if (count != null && count > 1000) count = 1000;
+        if (count != null && count > 100) count = 100;
         else if (count == null) count = 30;
 
         Server server = Server.getInstance();
