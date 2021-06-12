@@ -13,7 +13,7 @@ import java.util.HashSet;
 public class GetCommands {
 
 
-    public static Commands getClientCommands (StudyGroupCollection collection){
+    public static Commands getClientCommands (StudyGroupCollection collection, DataBase dataBase){
         HashSet<Command> set1 = new HashSet<>();
         HashSet<Command> set3 = new HashSet<>();
         Commands clientCommands = new Commands();
@@ -22,14 +22,14 @@ public class GetCommands {
         set1.add(new ShowCommand(collection));
         set1.add(new ShowOneCommand(collection));
         set1.add(new ExitCommand("Переподключение к серверу (возможность зайти под другим логином)"));
-        set3.add(new InsertCommand(collection));
-        set3.add(new UpdateCommand(collection));
-        set1.add(new RemoveKeyCommand(collection));
-        set1.add(new ClearCommand(collection));
-        set3.add(new RemoveGreaterCommand(collection));
-        set3.add(new ReplaceIfLowe(collection));
-        set1.add(new RemoveGreaterKeyCommand(collection));
-        set1.add(new RemoveAllByFormOfEducationCommand(collection));
+        set3.add(new InsertCommand(collection, dataBase));
+        set3.add(new UpdateCommand(collection, dataBase));
+        set1.add(new RemoveKeyCommand(collection, dataBase));
+        set1.add(new ClearCommand(collection, dataBase));
+        set3.add(new RemoveGreaterCommand(collection, dataBase));
+        set3.add(new ReplaceIfLowe(collection, dataBase));
+        set1.add(new RemoveGreaterKeyCommand(collection, dataBase));
+        set1.add(new RemoveAllByFormOfEducationCommand(collection, dataBase));
         set1.add(new SumOfStudentsCountCommand(collection));
         set1.add(new CountByStudentsCountCommand(collection));
         set1.add(new ExecuteScriptCommand());
@@ -44,7 +44,6 @@ public class GetCommands {
         Commands serverCommands = new Commands();
 
         set.add(new HelpCommand(serverCommands));
-        set.add(new SaveCommand(null));
         set.add(new DisconnectCommand());
         set.add(new ShowConnectionCommand());
         set.add(new ExitCommand());

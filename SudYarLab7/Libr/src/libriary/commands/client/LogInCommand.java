@@ -11,7 +11,7 @@ public class LogInCommand extends AbstractCommand {
     private StudyGroupCollection studyGroupCollection;
 
     public LogInCommand(StudyGroupCollection studyGroupCollection) {
-        super("log", "login password", "Вход под данными логином и паролем через пробел (если не было пароля, не вводите его)");
+        super("log", "<login> <password>", "Вход под данными логином и паролем через пробел (если не было пароля, не вводите его)");
         this.studyGroupCollection = studyGroupCollection;
     }
 

@@ -17,7 +17,7 @@ public class Main {
 
 
 
-        Commands clientCommands = GetCommands.getClientCommands(null);
+        Commands clientCommands = GetCommands.getClientCommands(null, null);
         String line;
         do {
             try (Socket socket = new Socket("localhost", 31174)) {

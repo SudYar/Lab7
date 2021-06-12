@@ -17,7 +17,7 @@ public class Registration {
 
     public static UserConnection logIn(Client client, Commands commands) throws IOException, ClassNotFoundException {
         UserConnection user = null;
-        client.printLn("Пожалуйста зарегестрируйтесь или войдите, используя ваш логин и пароль (если нет пароля - будет установлен пустой пароль\nМожете ввести help");
+        client.printLn("Пожалуйста зарегестрируйтесь (reg <login> <password>) или войдите (log <login> <password>), используя ваш логин и пароль \n(если нет пароля - будет установлен пустой пароль)\nМожете ввести help");
         while (user == null) {
             client.print("$");
             String line = client.readLine();

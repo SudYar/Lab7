@@ -98,6 +98,7 @@ public class Client {
                             }
                             StudyGroup group = new StudyGroupAsk().getStudyGroup(this);
                             group.setLoginOwner(user.getUser().getLogin());
+                            group.setIdOwner(user.getUser().getId());
                             request = new Pack(user, commands.getCommand(command[0]), argument, group);
                         } else request = new Pack(user, commands.getCommand(command[0]), argument);
                         sendPack(request);

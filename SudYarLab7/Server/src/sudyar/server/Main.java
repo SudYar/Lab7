@@ -24,7 +24,7 @@ public class Main {
 
 
         StudyGroupCollection collection = StudyGroupCollection.getInstance();
-        server.run(31174, GetCommands.getClientCommands(collection), GetCommands.getServerCommands(), 30);
+        server.run(31174, GetCommands.getServerCommands(), 30);
 
     }
 }

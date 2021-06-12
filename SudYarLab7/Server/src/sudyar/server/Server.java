@@ -8,6 +8,7 @@ import libriary.internet.DataBase;
 import libriary.internet.Pack;
 import libriary.internet.User;
 import libriary.internet.UserConnection;
+import libriary.utilities.GetCommands;
 import libriary.utilities.Serializer;
 
 import java.io.BufferedReader;
@@ -70,14 +71,15 @@ public class Server {
         }
     }
 
-    public void run(int port,Commands clientCommands, Commands serverCommands, int maxConnection) {
+    public void run(int port, Commands serverCommands, int maxConnection) {
         for (int i = 1; i <= maxConnection + 1 ; i++){
             freeId.add(i);
         }
         DataBase dataBase = null;
-        print("Введите пароль от пользователя s311742, чтобы войти в базу данных\n>");
+        println("Введите пароль от пользователя s311742, чтобы войти в базу данных");
         while (dataBase == null) {
             try {
+                print(">");
                 dataBase = new DataBase("s311742", readLine());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -95,6 +97,7 @@ public class Server {
         }
         getServerConsole(serverCommands).start();
         try(ServerSocket serverSocket = new ServerSocket(port)) {
+            Commands clientCommands = GetCommands.getClientCommands(studyGroupCollection, dataBase) ;
             printInf("Сервер запущен");
             Socket clientSocket;
             while (serverRun){
@@ -185,7 +188,6 @@ public class Server {
             while (true) {
                 String line = readLine();
                 if (line == null) {
-                    printInf(commands.getCommand("save").execute(null));
                     printInf("Завершение работы сервера");
                     printInf(commands.getCommand("exit").execute(null));
                 }
@@ -196,7 +198,6 @@ public class Server {
                             if ("VALID".equals(commands.getCommand(splitLine[0]).isValidArgument( argument)))
                                 switch (splitLine[0]){
                                     case ("exit"):
-                                        printInf(commands.getCommand("save").execute(null));
                                         printInf("Завершение работы сервера");
                                         printInf(commands.getCommand("exit").execute(null));
                                         break;

@@ -4,6 +4,7 @@ import libriary.commands.Command;
 import libriary.commands.Commands;
 import libriary.data.Coordinates;
 import libriary.data.Semester;
+import libriary.data.StudyGroup;
 import libriary.internet.Pack;
 
 import java.util.List;
@@ -64,12 +65,15 @@ public class CommandsExecute {
                             answer.append("Semester должен быть " + Semester.nameList() + ", а не \"" + list.get(i - 1) + "\"\n");
                             continue;
                         }
-                        if (builder.addNameAdmin(list.get(i++)) && (list.size() > (i + 1))) /*+1 чтобы прочитать ещё Passport */ {
+                        if (builder.addNameAdmin(list.get(i++)) && (list.size() > (i + 1))) /*+1 чтобы прочитать ещё PassportID */ {
                             if (builder.addWeight(list.get(i++))) {
                                 if (!builder.addPassportId(list.get(i++)))
                                     answer.append("PassportId должна быть непустая строка\n");
                             } else answer.append("Weight должен быть типа double > 0\n" );
                         }
+                        StudyGroup newGroup = builder.toStudyGroup();
+                        newGroup.setIdOwner(pack.getUserConnection().getUser().getId());
+                        newGroup.setLoginOwner(pack.getUserConnection().getUser().getLogin());
                         Pack newPack = new Pack(pack.getUserConnection(), command, argument, builder.toStudyGroup());
                         answer.append(command.execute(newPack)).append('\n');
                         continue;

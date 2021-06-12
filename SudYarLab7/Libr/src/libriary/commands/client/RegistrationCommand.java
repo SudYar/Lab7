@@ -14,7 +14,7 @@ public class RegistrationCommand extends AbstractCommand {
     private DataBase dataBase;
 
     public RegistrationCommand(StudyGroupCollection studyGroupCollection, DataBase dataBase) {
-        super("reg", "login password", "Регистрация пользователя с таким логином с возможностью указать пароль");
+        super("reg", "<login> <password>", "Регистрация пользователя с таким логином с возможностью указать пароль");
         this.studyGroupCollection = studyGroupCollection;
         this.dataBase = dataBase;
     }

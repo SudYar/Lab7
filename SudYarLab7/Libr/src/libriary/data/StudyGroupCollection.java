@@ -34,7 +34,7 @@ public class StudyGroupCollection {
     }
 
 
-    public void add(StudyGroup s) throws DuplicateException {
+    public synchronized void add(StudyGroup s) throws DuplicateException {
         if (collection.containsKey(s.getId())) throw new DuplicateException("ERROR: Повторение id");
         if ((s.getGroupAdmin() != null) && (passportIdSet.contains(s.getGroupAdmin().getPassportID())))
             throw new DuplicateException("ERROR: Повторение passportId админа");
@@ -43,7 +43,7 @@ public class StudyGroupCollection {
         if (s.getGroupAdmin() != null) passportIdSet.add(s.getGroupAdmin().getPassportID());
     }
 
-    public void update(int id, StudyGroup s) throws DuplicateException{
+    public synchronized void update(int id, StudyGroup s) throws DuplicateException{
         s.setId(id);
         if (s.getGroupAdmin() != null) {
             if (passportIdSet.contains(s.getGroupAdmin().getPassportID()) &&
@@ -58,21 +58,20 @@ public class StudyGroupCollection {
         if (s.getGroupAdmin() != null) passportIdSet.add(s.getGroupAdmin().getPassportID());
     }
 
-    public void insert(StudyGroup s) throws DuplicateException{
-        s.setId(++maxId);
+    public synchronized void insert(int id,StudyGroup s) throws DuplicateException{
+        s.setId(id);
         add(s);
     }
 
-    public void remove(int id){
+    public synchronized void remove(int id){
 
         if (collection.containsKey(id)) {
             if (collection.get(id).getGroupAdmin() != null) passportIdSet.remove(collection.get(id).getGroupAdmin().getPassportID());
             collection.remove(id);
         }
-        if (id == maxId) maxId = Collections.max(collection.keySet());
     }
 
-    public void clear(){
+    public synchronized void clear(){
         collection.clear();
         passportIdSet.clear();
         maxId = 0;

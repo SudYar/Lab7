@@ -1,6 +1,7 @@
 package libriary.internet;
 
 import com.sun.istack.internal.NotNull;
+import libriary.data.FormOfEducation;
 import libriary.data.Person;
 import libriary.data.StudyGroup;
 import libriary.data.StudyGroupCollection;
@@ -27,7 +28,7 @@ public class DataBase {
 
     }
 
-    public int insert (User user) throws DBExceprion, SQLException {
+    public synchronized int insert (User user) throws DBExceprion, SQLException {
         PreparedStatement preparedStatement =
                 connection.prepareStatement("insert into users (login, password) values (?, ?) returning id");
         preparedStatement.setString(1, user.getLogin());
@@ -43,46 +44,41 @@ public class DataBase {
 
     }
 
-    public int insert(@NotNull Person groupAdmin) throws SQLException, DBExceprion {
+    public synchronized void insert(@NotNull Person groupAdmin, int id) throws SQLException, DBExceprion {
         if (groupAdmin == null) throw new NullPointerException("groupAdmin cannot be null");
         PreparedStatement preparedStatement =
-                connection.prepareStatement("insert into person (name, weight, passport_id) values (?, ?, ?) returning id");
-        preparedStatement.setString(1, groupAdmin.getName());
-        preparedStatement.setDouble(2, groupAdmin.getWeight());
-        preparedStatement.setString(3, groupAdmin.getPassportID());
-
-        if (preparedStatement.execute()) {
-            ResultSet resultSet = preparedStatement.getResultSet();
-            if (resultSet.next()) {
-                return resultSet.getInt("id");
-            }
-        }
-        throw new DBExceprion("Не получилось добавить нового Админа");
+                connection.prepareStatement("insert into persons (id, name, weight, passport_id) values (?, ?, ?, ?)");
+        preparedStatement.setInt(1, id);
+        preparedStatement.setString(2, groupAdmin.getName());
+        preparedStatement.setDouble(3, groupAdmin.getWeight());
+        preparedStatement.setString(4, groupAdmin.getPassportID());
+        preparedStatement.execute();
 
     }
 
-    public int insert(StudyGroup studyGroup, int ownedId, String login) throws SQLException, DBExceprion {
-        Integer personId = (studyGroup.getGroupAdmin() == null ? null : insert(studyGroup.getGroupAdmin()));
+    public synchronized int insert(StudyGroup studyGroup, int ownedId, String login) throws SQLException, DBExceprion {
         PreparedStatement preparedStatement =
-                connection.prepareStatement("insert into groups (name, x, y, date, studentcount, form_of_education, sem, id_admin, login_owner, id_owner) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) returning id");
+                connection.prepareStatement("insert into groups (name, x, y, date, studentcount, form_of_education, sem, login_owner, id_owner) values (?, ?, ?, ?, ?, CAST (? AS education), CAST (? AS semester), ?, ?) returning id");
         preparedStatement.setString(1, studyGroup.getName());
         preparedStatement.setDouble(2, studyGroup.getCoordinates().getX());
         preparedStatement.setFloat(3, studyGroup.getCoordinates().getY());
         preparedStatement.setLong(4, studyGroup.getCreationDate().getTime());
         preparedStatement.setInt(5, studyGroup.getStudentsCount());
-        preparedStatement.setString(6, (studyGroup.getFormOfEducation() == null ? null : studyGroup.getFormOfEducation().toString()));
+        preparedStatement.setString(6, (studyGroup.getFormOfEducation()== null? null : studyGroup.getFormOfEducation().toString()));
         preparedStatement.setString(7, studyGroup.getSemesterEnum().toString());
-        preparedStatement.setInt(8, personId);
-        preparedStatement.setString(9, login);
-        preparedStatement.setInt(10, ownedId);
+        preparedStatement.setString(8, login);
+        preparedStatement.setInt(9, ownedId);
 
+        int id = 0;
         if (preparedStatement.execute()) {
             ResultSet resultSet = preparedStatement.getResultSet();
             if (resultSet.next()) {
-                return resultSet.getInt("id");
+                id = resultSet.getInt("id");
             }
         }
-        throw new DBExceprion("Не получилось добавить новую группу");
+        if (id == 0) throw new DBExceprion("Не получилось добавить новую группу");
+        else if (studyGroup.getGroupAdmin() != null) insert(studyGroup.getGroupAdmin(), id);
+        return id;
     }
 
     public Person selectPerson(int id) throws SQLException, DBExceprion {
@@ -145,7 +141,7 @@ public class DataBase {
                 builder.addStudentCount(resultSet.getInt("studentcount"));
                 builder.addFormOfEducation(resultSet.getString("form_of_education"));
                 builder.addSemester(resultSet.getString("sem"));
-                Person groupAdmin = selectPerson(resultSet.getInt("id_admin"));
+                Person groupAdmin = selectPerson(id);
                 builder.addOwnerId(resultSet.getInt("login_owner"));
                 builder.addOwnerLogin(resultSet.getString("login_owner"));
                 StudyGroup studyGroup = builder.toStudyGroup();
@@ -173,8 +169,8 @@ public class DataBase {
                 builder.addStudentCount(resultSet.getInt("studentcount"));
                 builder.addFormOfEducation(resultSet.getString("form_of_education"));
                 builder.addSemester(resultSet.getString("sem"));
-                Person groupAdmin = selectPerson(resultSet.getInt("id_admin"));
-                builder.addOwnerId(resultSet.getInt("login_owner"));
+                Person groupAdmin = selectPerson(id);
+                builder.addOwnerId(resultSet.getInt("id_owner"));
                 builder.addOwnerLogin(resultSet.getString("login_owner"));
                 StudyGroup studyGroup = builder.toStudyGroup();
                 Date creationDate = StudyGroupParser.parseDate(resultSet.getLong("date"));
@@ -204,8 +200,58 @@ public class DataBase {
             answer += "Копирование данных с базы данных завершено";
         }
         return answer;
-
     }
+
+    public synchronized void update(int id, StudyGroup s) throws SQLException, DBExceprion {
+
+        PreparedStatement preparedStatement = connection.prepareStatement("update groups set " +
+                "(name, x, y, date, studentcount, form_of_education, sem) " +
+                "= (?, ?, ?, ?, ?, CAST (? AS education), CAST (? AS semester)) where id=?");
+        preparedStatement.setString(1, s.getName());
+        preparedStatement.setDouble(2, s.getCoordinates().getX());
+        preparedStatement.setFloat(3, s.getCoordinates().getY());
+        preparedStatement.setLong(4, s.getCreationDate().getTime());
+        preparedStatement.setInt(5, s.getStudentsCount());
+        preparedStatement.setString(6, (s.getFormOfEducation() == null ? null : s.getFormOfEducation().toString()));
+        preparedStatement.setString(7, s.getSemesterEnum().toString());
+        preparedStatement.setInt(8, id);
+        preparedStatement.execute();
+
+        if (s.getGroupAdmin() != null) update(id, s.getGroupAdmin());
+        else deletePerson(id);
+    }
+
+    public synchronized void deletePerson(int id) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement("delete from persons where id=?");
+        preparedStatement.setInt(1, id);
+        preparedStatement.execute();
+    }
+
+    public synchronized void update(int id, Person groupAdmin) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement("update persons set (name, weight, passport_id) = (?,?,?) where id=?");
+        preparedStatement.setString(1, groupAdmin.getName());
+        preparedStatement.setDouble(2, groupAdmin.getWeight());
+        preparedStatement.setString(3, groupAdmin.getPassportID());
+        preparedStatement.setInt(4, id);
+        preparedStatement.execute();
+    }
+
+    public synchronized void deleteStudyGroup(int id) throws SQLException {
+
+        PreparedStatement preparedStatement = connection.prepareStatement("delete from groups where id=?");
+        preparedStatement.setInt(1, id);
+        preparedStatement.execute();
+    }
+
+    public synchronized void deleteStudyGroup(FormOfEducation formOfEducation) throws SQLException {
+
+        PreparedStatement preparedStatement = connection.prepareStatement("delete from groups where form_of_education=CAST(? as education)");
+        preparedStatement.setString(1, formOfEducation.toString());
+        preparedStatement.execute();
+    }
+
+
+
 
 
 }

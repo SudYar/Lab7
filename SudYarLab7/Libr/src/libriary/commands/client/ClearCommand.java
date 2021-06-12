@@ -2,7 +2,10 @@ package libriary.commands.client;
 
 import libriary.commands.AbstractCommand;
 import libriary.data.StudyGroupCollection;
+import libriary.internet.DataBase;
 import libriary.internet.Pack;
+
+import java.sql.SQLException;
 
 /**
  * Очищает коллекцию
@@ -12,10 +15,13 @@ import libriary.internet.Pack;
 
 public class ClearCommand  extends AbstractCommand {
     private StudyGroupCollection studyGroupCollection;
+    private DataBase dataBase;
 
-    public ClearCommand(StudyGroupCollection studyGroupCollection) {
+
+    public ClearCommand(StudyGroupCollection studyGroupCollection, DataBase dataBase) {
         super("clear", "Очистить коллекцию");
         this.studyGroupCollection = studyGroupCollection;
+        this.dataBase = dataBase;
     }
 
     @Override
@@ -29,7 +35,19 @@ public class ClearCommand  extends AbstractCommand {
      */
     @Override
     public String execute(Pack pack) {
-        studyGroupCollection.clear();
-        return "Коллекция очищена";
+        int ownerId = pack.getUserConnection().getUser().getId();
+        String answer = "";
+        for (Integer i : studyGroupCollection.getCollection().keySet()) {
+            if (studyGroupCollection.getById(i).getIdOwner().equals(ownerId) ) {
+                try {
+                    dataBase.deleteStudyGroup(i);
+                    studyGroupCollection.remove(i);
+                    answer += "Элемент с Id " + i + " удален из коллекции\n";
+                } catch (SQLException throwables) {
+                    answer += "Не получилось удалить элемент в Id " + i + " по причине: " + throwables.getMessage() + "\n";
+                }
+            }
+        }
+        return answer + "Все ваши группы удалены";
     }
 }

@@ -92,7 +92,7 @@ public class Commands {
     public String toString() {
         String result = "";
         for (String i: commands.keySet()) {
-            result+= i + (commands.get(i).getDescriptionArgument() == null ? "" : " "+ commands.get(i).getDescriptionArgument() ) + "\t\t" + commands.get(i).getDescription() + "\n";
+            result+= String.format ("%-45s%-4s", i + (commands.get(i).getDescriptionArgument() == null ? "" : " "+ commands.get(i).getDescriptionArgument() ),  "  -  " + commands.get(i).getDescription() + "\n");
         }
 
         return result.trim();

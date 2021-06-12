@@ -28,6 +28,7 @@ public class ShowOneCommand extends AbstractCommand {
         if (id == null) return "Аргумент не является int > 0";
 
         if ( !studyGroupCollection.getCollection().containsKey(id)) return "Нет элемента с таким id";
+        else if (!studyGroupCollection.getById(id).getIdOwner().equals(pack.getUserConnection().getUser().getId())) return "Эта чужая группа";
         else return studyGroupCollection.getById(id).toString();
 
     }
