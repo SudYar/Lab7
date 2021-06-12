@@ -158,9 +158,9 @@ public class DataBase {
                     groupAdmin = selectPerson(id);
                 } catch (DBExceprion dbExceprion) {
                 }
-                builder.addOwnerId(resultSet.getInt("login_owner"));
-                builder.addOwnerLogin(resultSet.getString("login_owner"));
                 StudyGroup studyGroup = builder.toStudyGroup();
+                studyGroup.setIdOwner(resultSet.getInt("id_owner"));
+                studyGroup.setLoginOwner(resultSet.getString("login_owner"));
                 Date creationDate = StudyGroupParser.parseDate(resultSet.getLong("date"));
                 studyGroup.setId(id);
                 studyGroup.setCreationDate(creationDate);
@@ -190,9 +190,9 @@ public class DataBase {
                     groupAdmin = selectPerson(id);
                 } catch (DBExceprion dbExceprion) {
                 }
-                builder.addOwnerId(resultSet.getInt("id_owner"));
-                builder.addOwnerLogin(resultSet.getString("login_owner"));
                 StudyGroup studyGroup = builder.toStudyGroup();
+                studyGroup.setIdOwner(resultSet.getInt("id_owner"));
+                studyGroup.setLoginOwner(resultSet.getString("login_owner"));
                 Date creationDate = StudyGroupParser.parseDate(resultSet.getLong("date"));
                 studyGroup.setId(id);
                 studyGroup.setCreationDate(creationDate);

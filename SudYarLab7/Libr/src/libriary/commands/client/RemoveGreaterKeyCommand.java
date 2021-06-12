@@ -28,13 +28,13 @@ public class RemoveGreaterKeyCommand extends AbstractCommand {
     @Override
     public String  execute(Pack pack) {
         String argument = pack.getArgument();
-        int idOwner = pack.getUserConnection().getUser().getId();
+        Integer idOwner = pack.getUserConnection().getUser().getId();
         if (argument == null) return "Нет аргументов, требуется id типа int";
         String answer = "";
         try {
             Integer id = Integer.parseInt(argument);
             for (Integer i : studyGroupCollection.getCollection().keySet()) {
-                if (id.compareTo(i) < 0 && studyGroupCollection.getById(id).getIdOwner().equals(idOwner)) {
+                if (id.compareTo(i) < 0 && idOwner.equals(studyGroupCollection.getById(id).getIdOwner())) {
                     try {
                         dataBase.deleteStudyGroup(i);
                         studyGroupCollection.remove(i);

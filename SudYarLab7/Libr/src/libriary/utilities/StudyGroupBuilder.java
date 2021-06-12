@@ -148,7 +148,7 @@ public class StudyGroupBuilder {
         studyGroup.setGroupAdmin(StudyGroupParser.parsePerson(nameAdmin, weight, passportId));
         if ((studyGroup.getName() != null) && (studyGroup.getCoordinates() != null) &&
                 (studyGroup.getStudentsCount() != null) && (studyGroup.getSemesterEnum() != null) &&
-                (studyGroup.getCreationDate() != null) && (ownerId != null) && (ownerLogin != null))
+                (studyGroup.getCreationDate() != null))
             return studyGroup;
         else return null;
     }

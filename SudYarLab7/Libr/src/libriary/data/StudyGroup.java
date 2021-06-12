@@ -125,16 +125,16 @@ public class StudyGroup implements Comparable<StudyGroup>, Serializable {
 
     @Override
     public String toString() {
-        return  "ID:" + id +
-                "\n\tName: " + name  +
-                "\n\tCoordinates: " + coordinates +
-                "\n\tCreationDate(YYYY-MM-DD): " + (creationDate.getYear()+1900 + "-" + (creationDate.getMonth() + 1) +
-                                                    "-" + creationDate.getDate()) +
-                "\n\tStudents count: " + studentsCount +
-                "\n\tForm of education: " + (formOfEducation == null ? "-" : formOfEducation) +
-                "\n\tSemester: " + semesterEnum +
-                "\n\tGroup admin: " + (groupAdmin == null ? "-" : groupAdmin) +
-                "\n\tOwner: " + (loginOwner == null? "-" : loginOwner)
+        return  "ID:\u001B[36m" + id + "\u001B[0m" +
+                "\n\tName: \u001B[36m" + name  + "\u001B[0m" +
+                "\n\tCoordinates: \u001B[36m" + coordinates + "\u001B[0m" +
+                "\n\tCreationDate(YYYY-MM-DD): \u001B[36m" + (creationDate.getYear()+1900 + "-" + (creationDate.getMonth() + 1) +
+                                                    "-" + creationDate.getDate()) + "\u001B[0m" +
+                "\n\tStudents count: \u001B[36m" + studentsCount + "\u001B[0m" +
+                "\n\tForm of education: \u001B[36m" + (formOfEducation == null ? "-" : formOfEducation) + "\u001B[0m" +
+                "\n\tSemester: \u001B[36m" + semesterEnum + "\u001B[0m" +
+                "\n\tGroup admin: \u001B[36m" + (groupAdmin == null ? "-" : groupAdmin) + "\u001B[0m" +
+                "\n\tOwner: \u001B[36m" + (loginOwner == null? "-" : loginOwner) + "\u001B[0m"
                 ;
     }
 
