@@ -19,28 +19,12 @@ public class DataBase {
     private Connection connection;
 
     static final String DB_DRIVER = "org.postgresql.Driver";
-    static final String DB_CONNECT = "jdbc:postgresql://localhost:5430/studs";
-
+//    static final String DB_CONNECT = "jdbc:postgresql://localhost:5430/studs";
+    static final String DB_CONNECT ="jdbc:postgresql://pg:5432/studs";
     public DataBase(String login, String password) throws ClassNotFoundException, SQLException {
         Class.forName(DB_DRIVER);
 
         connection = DriverManager.getConnection(DB_CONNECT, login, password);
-
-    }
-
-    public synchronized int insert (User user) throws DBExceprion, SQLException {
-        PreparedStatement preparedStatement =
-                connection.prepareStatement("insert into users (login, password) values (?, ?) returning id");
-        preparedStatement.setString(1, user.getLogin());
-        preparedStatement.setString(2, user.getPassword());
-
-        if (preparedStatement.execute()){
-            ResultSet resultSet = preparedStatement.getResultSet();
-            if (resultSet.next()){
-                return  resultSet.getInt("id");
-            }
-        }
-        throw new DBExceprion("Не получилось добавить нового пользователя");
 
     }
 
@@ -57,6 +41,18 @@ public class DataBase {
     }
 
     public synchronized int insert(StudyGroup studyGroup, int ownedId, String login) throws SQLException, DBExceprion {
+        if (studyGroup.getGroupAdmin() !=null){
+            PreparedStatement preparedStatement = connection.prepareStatement("select id from persons where passport_id=?");
+            preparedStatement.setString(1, studyGroup.getGroupAdmin().getPassportID());
+            if (preparedStatement.execute()){
+                ResultSet resultSet = preparedStatement.getResultSet();
+                if (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    if (id != 0) throw new DBExceprion("ERROR: Повторение passportId админа");
+                }
+            }
+        }
+
         PreparedStatement preparedStatement =
                 connection.prepareStatement("insert into groups (name, x, y, date, studentcount, form_of_education, sem, login_owner, id_owner) values (?, ?, ?, ?, ?, CAST (? AS education), CAST (? AS semester), ?, ?) returning id");
         preparedStatement.setString(1, studyGroup.getName());
@@ -79,6 +75,22 @@ public class DataBase {
         if (id == 0) throw new DBExceprion("Не получилось добавить новую группу");
         else if (studyGroup.getGroupAdmin() != null) insert(studyGroup.getGroupAdmin(), id);
         return id;
+    }
+
+    public synchronized int insert (User user) throws DBExceprion, SQLException {
+        PreparedStatement preparedStatement =
+                connection.prepareStatement("insert into users (login, password) values (?, ?) returning id");
+        preparedStatement.setString(1, user.getLogin());
+        preparedStatement.setString(2, user.getPassword());
+
+        if (preparedStatement.execute()){
+            ResultSet resultSet = preparedStatement.getResultSet();
+            if (resultSet.next()){
+                return  resultSet.getInt("id");
+            }
+        }
+        throw new DBExceprion("Не получилось добавить нового пользователя");
+
     }
 
     public Person selectPerson(int id) throws SQLException, DBExceprion {
@@ -141,7 +153,11 @@ public class DataBase {
                 builder.addStudentCount(resultSet.getInt("studentcount"));
                 builder.addFormOfEducation(resultSet.getString("form_of_education"));
                 builder.addSemester(resultSet.getString("sem"));
-                Person groupAdmin = selectPerson(id);
+                Person groupAdmin = null;
+                try {
+                    groupAdmin = selectPerson(id);
+                } catch (DBExceprion dbExceprion) {
+                }
                 builder.addOwnerId(resultSet.getInt("login_owner"));
                 builder.addOwnerLogin(resultSet.getString("login_owner"));
                 StudyGroup studyGroup = builder.toStudyGroup();
@@ -169,7 +185,11 @@ public class DataBase {
                 builder.addStudentCount(resultSet.getInt("studentcount"));
                 builder.addFormOfEducation(resultSet.getString("form_of_education"));
                 builder.addSemester(resultSet.getString("sem"));
-                Person groupAdmin = selectPerson(id);
+                Person groupAdmin = null;
+                try {
+                    groupAdmin = selectPerson(id);
+                } catch (DBExceprion dbExceprion) {
+                }
                 builder.addOwnerId(resultSet.getInt("id_owner"));
                 builder.addOwnerLogin(resultSet.getString("login_owner"));
                 StudyGroup studyGroup = builder.toStudyGroup();

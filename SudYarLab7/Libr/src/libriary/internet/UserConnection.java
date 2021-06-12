@@ -45,7 +45,7 @@ public class UserConnection implements Serializable {
     public String toString() {
         return /*(id == null ? "" : "id подключения: " + id.toString()) +*/
                 "\n\tПользователь: " + (user==null ? "Клиент ещё не авторизовался" : user) +
-                "\n\tЕго подключение: " + socket.toString();
+                "\n\tЕго сокет: Адресс - " + socket.getInetAddress() + " порт - " + socket.getPort();
     }
 
     @Override

@@ -7,29 +7,30 @@ import libriary.utilities.StudyGroupParser;
 import java.util.Locale;
 
 public class StudyGroupAsk {
+    private final String BLUE_INPUT = "\u001B[36m>\u001B[0m";
 
     public StudyGroup getStudyGroup(Client client){
 
         String line;
         String name = null;
-        System.out.print("Введите имя группы\n>");
+        System.out.print("Введите имя группы\n" + BLUE_INPUT);
         line = client.readLine();
         if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) {
             name = StudyGroupParser.parseName(line.trim());
         }
         while (name == null){
-            System.out.print("Неверно введено имя, пожалуйста, введите непустую строку без разделяющих пробелов\n>");
+            System.out.print("Неверно введено имя, пожалуйста, введите непустую строку без разделяющих пробелов\n" + BLUE_INPUT);
             line = client.readLine();
             if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) {
                 name = StudyGroupParser.parseName(line.trim());
             }
         }
         Double x = null;
-        System.out.print("Введите x-ую координату типа double\n>");
+        System.out.print("Введите x-ую координату типа double\n" + BLUE_INPUT);
         line = client.readLine();
         if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) x = StudyGroupParser.parseX(line.trim());
         while (x == null){
-            System.out.print("Неверно введён x, пожалуйста, введите значение типа double\n>");
+            System.out.print("Неверно введён x, пожалуйста, введите значение типа double\n" + BLUE_INPUT);
             line = client.readLine();
             if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) {
                 x = StudyGroupParser.parseX(line.trim());
@@ -37,11 +38,11 @@ public class StudyGroupAsk {
         }
 
         Float y = null;
-        System.out.print("Введите y-ую координату типа float, больше " + Coordinates.yMinValue+ "\n>");
+        System.out.print("Введите y-ую координату типа float, больше " + Coordinates.yMinValue+ "\n" + BLUE_INPUT);
         line = client.readLine();
         if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) y = StudyGroupParser.parseY(line.trim());
         while (y == null){
-            System.out.print("Неверно введён y, пожалуйста, введите значение типа float, больше " + Coordinates.yMinValue+ "\n>");
+            System.out.print("Неверно введён y, пожалуйста, введите значение типа float, больше " + Coordinates.yMinValue+ "\n" + BLUE_INPUT);
             line = client.readLine();
             if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) {
                 y = StudyGroupParser.parseY(line.trim());
@@ -49,11 +50,11 @@ public class StudyGroupAsk {
         }
 
         Integer studentCount = null;
-        System.out.print("Введите количество студентов (натуральное число)\n>");
+        System.out.print("Введите количество студентов (натуральное число)\n" + BLUE_INPUT);
         line = client.readLine();
         if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) studentCount = StudyGroupParser.parseStudentsCount(line.trim());
         while (studentCount == null){
-            System.out.print("Неверно введено количество студентов, пожалуйста, введите целое значение больше 0 \n>");
+            System.out.print("Неверно введено количество студентов, пожалуйста, введите целое значение больше 0 \n" + BLUE_INPUT);
             line = client.readLine();
             if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) {
                 studentCount = StudyGroupParser.parseStudentsCount(line.trim());
@@ -62,14 +63,14 @@ public class StudyGroupAsk {
 
         FormOfEducation formOfEducation  = null;
         System.out.print("Введите форму обучения, возможные варианты: " + FormOfEducation.nameList() + "" +
-                "; Либо введите пустую строку, чтобы не запоминать форму обучения\n>");
+                "; \nЛибо введите пустую строку, чтобы не запоминать форму обучения\n" + BLUE_INPUT);
         line = client.readLine();
         if (!"".equals(line.toUpperCase(Locale.ROOT))) {
             if (line.trim().split(" ").length < 2)
                 formOfEducation = StudyGroupParser.parseFormOfEducation(line.trim());
             while (formOfEducation == null) {
                 System.out.print("Неверно введена форма обучения, возможные варианты: " + FormOfEducation.nameList() + "" +
-                        "; Либо введите пустую строку, чтобы не запоминать форму обучения\n>");
+                        "; \nЛибо введите пустую строку, чтобы не запоминать форму обучения\n" + BLUE_INPUT);
                 line = client.readLine();
                 if ("".equals(line.toUpperCase(Locale.ROOT))) break;
                 if (line.trim().split(" ").length < 2) {
@@ -79,11 +80,11 @@ public class StudyGroupAsk {
         }
 
         Semester semester = null;
-        System.out.print("Введите семестр, возможные варианты: " + Semester.nameList() + "\n>");
+        System.out.print("Введите семестр, возможные варианты: " + Semester.nameList() + "\n" + BLUE_INPUT);
         line = client.readLine();
         if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) semester = StudyGroupParser.parseSemesterEnum(line.trim());
         while (semester == null){
-            System.out.print("Неверно введен семестр, возможные варианты: " + Semester.nameList() + "\n>");
+            System.out.print("Неверно введен семестр, возможные варианты: " + Semester.nameList() + "\n" + BLUE_INPUT);
             line = client.readLine();
             if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) {
                 semester = StudyGroupParser.parseSemesterEnum(line.trim());
@@ -93,13 +94,13 @@ public class StudyGroupAsk {
         Person groupAdmin = null;
 
         String nameAdmin = null;
-        System.out.print("Введите имя админа группы, не может быть пустым и содержать пробелы,\nили введите пустую строку, если не хотите добавлять админа\n>");
+        System.out.print("Введите имя админа группы, не может быть пустым и содержать пробелы,\nили введите пустую строку, если не хотите добавлять админа\n" + BLUE_INPUT);
         line = client.readLine();
         if (!"".equals(line.trim())){
 
             if (line.trim().split(" ").length < 2) nameAdmin = StudyGroupParser.parseNameAdmin(line.trim());
             while (nameAdmin == null){
-                System.out.print("Неверно введено имя админа группы, оно не может быть пустым и содержать пробелы\n>");
+                System.out.print("Неверно введено имя админа группы, оно не может быть пустым и содержать пробелы\n" + BLUE_INPUT);
                 line = client.readLine();
                 if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) {
                     nameAdmin = StudyGroupParser.parseNameAdmin(line.trim());
@@ -107,11 +108,11 @@ public class StudyGroupAsk {
             }
 
             Double weigh = null;
-            System.out.print("Введите вес админа типа double, больше 0\n>");
+            System.out.print("Введите вес админа типа double, больше 0\n" + BLUE_INPUT);
             line = client.readLine();
             if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) weigh = StudyGroupParser.parseWeigh(line.trim());
             while (weigh == null){
-                System.out.print("Неверно введен вес админа группы, он должен быть типа double, больше 0\n>");
+                System.out.print("Неверно введен вес админа группы, он должен быть типа double, больше 0\n" + BLUE_INPUT);
                 line = client.readLine();
                 if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) {
                     weigh = StudyGroupParser.parseWeigh(line.trim());
@@ -119,14 +120,14 @@ public class StudyGroupAsk {
             }
 
             String passportId = null;
-            System.out.print("Введите passportId админа (непустая уникальная строка без пробелов)\n>");
+            System.out.print("Введите passportId админа (непустая уникальная строка без пробелов)\n" + BLUE_INPUT);
             line = client.readLine();
             if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) {
                 passportId = StudyGroupParser.parsePassportId(line.trim());
             }
 
             while (passportId == null){
-                System.out.print("Неверно введен passportId админа (должна быть непустая уникальная строка без пробелов)\n>");
+                System.out.print("Неверно введен passportId админа (должна быть непустая уникальная строка без пробелов)\n" + BLUE_INPUT);
                 line = client.readLine();
                 if (!"".equals(line.trim()) && line.trim().split(" ").length < 2) {
                     passportId = StudyGroupParser.parsePassportId(line.trim());

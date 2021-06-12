@@ -19,7 +19,7 @@ public class Registration {
         UserConnection user = null;
         client.printLn("Пожалуйста зарегестрируйтесь (reg <login> <password>) или войдите (log <login> <password>), используя ваш логин и пароль \n(если нет пароля - будет установлен пустой пароль)\nМожете ввести help");
         while (user == null) {
-            client.print("$");
+            client.print("\u001B[32m$\u001B[0m");
             String line = client.readLine();
             String[] splitLine = line.trim().split(" ");
             if (splitLine.length < 1) client.printLn("Ошибка, поступила пустая строка");

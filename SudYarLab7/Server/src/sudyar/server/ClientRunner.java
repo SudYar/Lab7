@@ -68,7 +68,7 @@ public class ClientRunner extends Thread {
                 }
             }
         }catch (IOException e) {
-            server.printInf("Отключился клиент с id: " + idConnection + "\nподключением: " + userConnection.toString());
+            server.printInf("Отключился клиент с id: " + idConnection + "\n с подключением: " + userConnection.toString());
             try {
                 server.removeClient(idConnection);
                 socket.close();

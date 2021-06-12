@@ -38,6 +38,7 @@ public class RegistrationCommand extends AbstractCommand {
                     user.setId(id);
                     return studyGroupCollection.addUser(user);
                 } catch (SQLException | DBExceprion throwables) {
+                    throwables.printStackTrace();
                     return "Ошибка, не получилось добавить пользователя в базу данных";
                 }
             }

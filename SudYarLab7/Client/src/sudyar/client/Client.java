@@ -51,7 +51,7 @@ public class Client {
 
             String line;
             while (isConnected) {
-                print("$");
+                print("\u001B[32m$\u001B[0m");
                 line = readLine();
                 String[] command = line.trim().split(" ", 3);
                 String argument;
@@ -101,12 +101,25 @@ public class Client {
                             group.setIdOwner(user.getUser().getId());
                             request = new Pack(user, commands.getCommand(command[0]), argument, group);
                         } else request = new Pack(user, commands.getCommand(command[0]), argument);
+
                         sendPack(request);
                         if (!isConnected) continue;
-
                         Pack answerPack = readPack();
-                        if (answerPack != null && !"".equals(answerPack.getAnswer()))
-                            System.out.println(answerPack.getAnswer());
+                        line = "line";
+                        if (answerPack != null && !"".equals(answerPack.getAnswer())) {
+                            while (answerPack != null && !"".equals(answerPack.getAnswer()) &&
+                                    "ERROR: Повторение passportId админа".equals(answerPack.getAnswer())
+                                    && !"".equals(line.trim()) && isConnected ) {
+                                print(answerPack.getAnswer()+ "\n Введите другой passportId админа или пустую строку, если вам надоело\n>");
+                                line = readLine();
+                                if ("".equals(line.trim())) continue;
+                                else request.getStudyGroup().getGroupAdmin().setPassportID(line);
+                                sendPack(request);
+                                if (!isConnected) continue;
+                                answerPack = readPack();
+                            }
+                            printLn(answerPack.getAnswer());
+                        }
                         else System.out.println("Ошибка при получении пакета");
 
                     }

@@ -34,7 +34,7 @@ public class InsertCommand extends AbstractCommand {
         } catch (DBExceprion dbExceprion) {
             return dbExceprion.getMessage();
         } catch (SQLException throwables) {
-            return "ERROR: Повторение passportId админа" ;
+            return throwables.getMessage() ;
         }
     }
     

@@ -9,7 +9,7 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) {
 
-        String log = "SudYar6log.txt";
+        String log = "SudYar7log.txt";
         File logFile = new File(log);
         if (!logFile.isFile()) {
             try {

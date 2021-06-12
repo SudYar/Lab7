@@ -22,6 +22,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.*;
 
 /**
@@ -31,6 +33,7 @@ import java.util.logging.*;
 
 public class Server {
     private static volatile Server instance;
+    private ExecutorService executorService = Executors.newCachedThreadPool();
 
     StudyGroupCollection studyGroupCollection;
     static final Logger logger = Logger.getLogger(Server.class.getName());
@@ -114,8 +117,7 @@ public class Server {
                         clientCollection.put(idConnection, clientConnection);
                         sendPack(answer, idConnection);
                         printInf("Ему выдан свободный id: " + idConnection);
-                        ClientRunner newClient = new ClientRunner(clientSocket, this, clientCommands, idConnection, clientConnection, dataBase);
-                        newClient.start();
+                        executorService.submit( new ClientRunner(clientSocket, this, clientCommands, idConnection, clientConnection, dataBase));
                     }
                     else {
                         answer = new Pack("Сервер переполнен, подключайтесь позже");
